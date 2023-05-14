@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_PRODUCTS 100
+
+// Define product structure
+struct product {
+    char id[10];
+    char name[50];
+    float price;
+    int quantity;
+};
+
+// Declare global variables
+struct product inventory[MAX_PRODUCTS];
+int num_products = 0;
+
+// Function to add a new product
+void add_product() {
+    if (num_products >= MAX_PRODUCTS) {
+        printf("Inventory is full. Cannot add more products.\n");
+        return;
+    }
+
+    struct product new_product;
+    printf("Enter product ID: ");
+    scanf("%s", new_product.id);
+    printf("Enter product name: ");
+    scanf("%s", new_product.name);
+    printf("Enter product price: ");
+    scanf("%f", &new_product.price);
+    printf("Enter product quantity: ");
+    scanf("%d", &new_product.quantity);
+
+    inventory[num_products] = new_product;
+    num_products++;
+
+    printf("Product added successfully.\n");
+}
+
+// Function to update an existing product
+void update_product() {
+    char id[10];
+    printf("Enter product ID to update: ");
+    scanf("%s", id);
+
+    int found = 0;
+    for (int i = 0; i < num_products; i++) {
+        if (strcmp(inventory[i].id, id) == 0) {
+            printf("Enter new product name: ");
+            scanf("%s", inventory[i].name);
+            printf("Enter new product price: ");
+            scanf("%f", &inventory[i].price);
+            printf("Enter new product quantity: ");
+            scanf("%d", &inventory[i].quantity);
+            found = 1;
+            printf("Product updated successfully.\n");
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Product not found.\n");
+    }
+}
+
+// Function to delete a product
+void delete_product() {
+    char id[10];
+    printf("Enter product ID to delete: ");
+    scanf("%s", id);
+
+    int found = 0;
+    for (int i = 0; i < num_products; i++) {
+        if (strcmp(inventory[i].id, id) == 0) {
+            for (int j = i; j < num_products - 1; j++) {
+                inventory[j] = inventory[j + 1];
+            }
+            num_products--;
+            found = 1;
+            printf("Product deleted successfully.\n");
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Product not found.\n");
+    }
+}
+
+// Function to manage stock
+void manage_stock() {
+    char id[10];
+    printf("Enter product ID to sell: ");
+    scanf("%s", id);
+
+    int found = 0;
+    for (int i = 0; i < num_products; i++) {
+        if (strcmp(inventory[i].id, id) == 0) {
+            int quantity;
+            printf("Enter quantity to sell: ");
+            scanf("%d", &quantity);
+
+            if (quantity > inventory[i].quantity) {
+                printf("Not enough stock. Only %d items available.\n", inventory[i].quantity);
+            } else {
+                inventory[i].quantity -= quantity;
+                printf("%d items sold. Total cost: %.2f\n", quantity, quantity * inventory[i].price);
+            }
+
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("Product not found.\n");
+    }
+}
+
+// Function to generate inventory report
